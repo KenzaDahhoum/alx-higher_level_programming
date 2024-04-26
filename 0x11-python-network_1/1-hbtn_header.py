@@ -1,13 +1,15 @@
 #!/usr/bin/python3
 """
-fetch argv1 
-display a value from the header
+This script takes a URL as input, sends a request to the URL, and displays
+the value of the X-Request-Id variable found in the header of the response.
 """
+
 import urllib.request
 import sys
 
-url = sys.argv[1] 
-with urllib.request.urlopen(url) as response:
-	x = response.getheader('X-Request-Id')
-	print(x)
-        
+if __name__ == "__main__":
+    url = sys.argv[1]
+    with urllib.request.urlopen(url) as response:
+        request_id = response.getheader('X-Request-Id')
+        print(request_id)
+
