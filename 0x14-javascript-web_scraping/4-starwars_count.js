@@ -1,17 +1,33 @@
 #!/usr/bin/node
 
 const request = require('request');
+const starWarsUri = process.argv[2];
+let times = 0;
 
-const apiUrl = process.argv[2];
-const wedgeAntillesId = 'https://swapi-api.alx-tools.com/api/people/18/';
-
-request.get(apiUrl, function (error, response, body) {
-  if (error) {
-    console.error(error);
+request(starWarsUri, function (err, res, body) {
+  if (err) {
+    console.error(err);
     return;
   }
 
-  const films = JSON.parse(body).results;
-  const count = films.filter(film => film.characters.includes(wedgeAntillesId)).length;
-  console.log(count);
+  try {
+    const data = JSON.parse(body).results;
+
+    for (let i = 0; i < data.length; ++i) {
+      const characters = data[i].characters;
+
+      for (let j = 0; j < characters.length; ++j) {
+        const character = characters[j];
+        const characterId = character.split('/')[5];
+
+        if (characterId === '18') {
+          times += 1;
+        }
+      }
+    }
+
+    console.log(times);
+  } catch (e) {
+    console.error('Error parsing JSON:', e);
+  }
 });
